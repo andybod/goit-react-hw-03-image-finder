@@ -3,12 +3,14 @@ import { getImages } from 'services/feath';
 import css from './ImageGallery.module.css';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 import { Button } from 'components/Button/Button';
-// import { Loader } from 'components/Loader/Loader';
+import { Loader } from 'components/Loader/Loader';
+import PropTypes from 'prop-types';
 
 export default class ImageGallery extends Component {
   state = {
-    images: null,
+    images: 0,
     loading: false,
+    error: null,
   };
 
   componentDidUpdate = (prevProps, prevState) => {
@@ -20,6 +22,7 @@ export default class ImageGallery extends Component {
         .then(({ hits }) => {
           this.setState({ images: hits });
         })
+        .catch(error => this.setState({ error }))
         .finally(this.setState({ loading: false }));
     } else if (prevProps.page !== page) {
       this.setState({ loading: true });
@@ -27,27 +30,36 @@ export default class ImageGallery extends Component {
         .then(({ hits }) => {
           this.setState(({ images }) => ({ images: [...images, ...hits] }));
         })
+        .catch(error => this.setState({ error }))
         .finally(this.setState({ loading: false }));
     }
   };
 
   render() {
+    const { loading, images, error } = this.state;
     return (
       <>
-        {this.state.images && (
+        {error && <h1>{error.message}</h1>}
+        {loading && <Loader />}
+        {images.length > 0 && (
           <ul className={css['ImageGallery']}>
-            {this.state.images.map(({ id, webformatURL, largeImageURL }) => (
+            {images.map(({ id, webformatURL, largeImageURL }) => (
               <ImageGalleryItem
                 key={id}
                 webformatURL={webformatURL}
                 largeImageURL={largeImageURL}
               />
             ))}
-            {this.state.loading && <h1>load......</h1>}
             <Button click={this.props.hendelClick} />
           </ul>
         )}
+
+        {images.length === 0 && <h1>{this.props.searchText} не знайдено</h1>}
       </>
     );
   }
 }
+ImageGallery.propTypes = {
+  searchText: PropTypes.string.isRequired,
+  page: PropTypes.number.isRequired,
+};
