@@ -22,16 +22,17 @@ export default class Modal extends Component {
     }
   };
   render() {
+    const { largeImageURL } = this.props.image;
     return (
       <div className={css['Overlay']} onClick={this.onOverlayClose}>
         <div className={css['Modal']}>
-          <img src={this.props.image} alt="gfd" />
+          <img src={largeImageURL} alt="img" />
         </div>
       </div>
     );
   }
 }
 Modal.propTypes = {
-  image: PropTypes.string.isRequired,
+  image: PropTypes.object,
   onClose: PropTypes.func,
 };

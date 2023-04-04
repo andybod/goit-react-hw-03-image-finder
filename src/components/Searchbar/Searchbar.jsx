@@ -6,16 +6,12 @@ export default class Searchbar extends Component {
     value: '',
   };
   handleChange = ({ target: { value } }) => {
-    this.setState({ value });
+    this.setState({ value: value.toLowerCase() });
   };
   handleSubmit = e => {
     e.preventDefault();
-    if (this.state.value.trim() === '') {
-      alert('Введи слово');
-      return;
-    }
-    this.props.handleFormSabmit(this.state.value);
-    this.props.resetPage();
+    this.props.onSubmit(this.state.value);
+    this.setState({ value: '' });
   };
   render() {
     return (
@@ -28,8 +24,8 @@ export default class Searchbar extends Component {
           <input
             className={css['SearchForm-input']}
             type="text"
-            // autocomplete="off"
-            // autofocus
+            autoComplete="off"
+            autoFocus
             placeholder="Search images and photos"
             lavue={this.state.value}
             onChange={this.handleChange}
@@ -41,5 +37,4 @@ export default class Searchbar extends Component {
 }
 Searchbar.propTypes = {
   handleFormSabmit: PropTypes.func,
-  resetPage: PropTypes.func,
 };

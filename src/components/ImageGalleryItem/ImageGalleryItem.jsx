@@ -10,7 +10,8 @@ export default class ImageGalleryItem extends Component {
     this.setState(({ shownModal }) => ({ shownModal: !shownModal }));
   };
   render() {
-    const { webformatURL, largeImageURL } = this.props;
+    const { item } = this.props;
+    const { webformatURL } = item;
     return (
       <li className={css['ImageGalleryItem']}>
         <img
@@ -19,14 +20,11 @@ export default class ImageGalleryItem extends Component {
           className={css['ImageGalleryItem-image']}
           onClick={this.onModal}
         />
-        {this.state.shownModal && (
-          <Modal onClose={this.onModal} image={largeImageURL} />
-        )}
+        {this.state.shownModal && <Modal onClose={this.onModal} image={item} />}
       </li>
     );
   }
 }
 ImageGalleryItem.propTypes = {
-  webformatURL: PropTypes.string.isRequired,
-  largeImageURL: PropTypes.string,
+  item: PropTypes.object,
 };
